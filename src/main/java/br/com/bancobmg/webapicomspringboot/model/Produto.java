@@ -15,6 +15,8 @@ public class Produto {
 	private String nome;
 
 	private Double preco;
+	
+	private String url;
 
 	public Long getId() {
 		return id;
@@ -38,6 +40,14 @@ public class Produto {
 
 	public void setPreco(Double preco) {
 		this.preco = preco;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }
