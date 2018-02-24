@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.bancobmg.webapicomspringboot.model.Produto;
@@ -49,7 +50,7 @@ public class ProdutoResource {
 		try {
 			produtoRepository.delete(id);
 		} catch (EmptyResultDataAccessException e) {
-			new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
@@ -62,20 +63,26 @@ public class ProdutoResource {
 		
 		produto = produtoRepository.save(produto);
 		
-		return new ResponseEntity<Produto>(produto, HttpStatus.OK);
+		return new ResponseEntity<Produto>(produto, HttpStatus.CREATED);
 	}
 	
-	@PutMapping
-	public ResponseEntity<?> update(@RequestBody Produto produto) {
-		if (produto.getId() == null) {
+	@PutMapping("/{id}")
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Produto produto) {
+		if (id == null || produto == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
-		if (produtoRepository.findOne(produto.getId()) == null) {
+		Produto produtoEncontrado = produtoRepository.findOne(id);
+		
+		if (produtoEncontrado == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
-		produtoRepository.save(produto);
+		produtoEncontrado.setNome(produto.getNome());
+		produtoEncontrado.setPreco(produto.getPreco());
+		produtoEncontrado.setUrl(produto.getUrl());
+		
+		produtoRepository.save(produtoEncontrado);
 		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

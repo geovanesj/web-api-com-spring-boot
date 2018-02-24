@@ -17,6 +17,10 @@ public class Produto {
 	private Double preco;
 	
 	private String url;
+	
+	public Produto() {
+		super();
+	}
 
 	public Long getId() {
 		return id;
